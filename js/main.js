@@ -1,74 +1,5 @@
 
 
-// fetch('all360.txt')
-//   .then(response => response.text())
-//   .then(data => {
-//     const list = document.getElementById('product-list');
-//     data.trim().split('\n').forEach(line => {
-//       const [name, img] = line.split('|');
-//       const li = document.createElement('li');
-//       li.textContent = name;
-//       li.onclick = () => openViewer(img);
-//       list.appendChild(li);
-//     });
-//   });
-
-// let viewer;
-
-// function openViewer(image) {
-//   document.getElementById('viewer').style.display = 'block';
-
-//   viewer = new PhotoSphereViewer.Viewer({
-//     container: document.getElementById('viewer'),
-//     panorama: image,
-//     navbar: 'zoom move fullscreen',
-//     defaultLong: Math.PI,
-//     useXmpData: false,
-//     touchmoveTwoFingers: false,
-//     mousewheel: false,
-//     plugins: [
-//       [PhotoSphereViewer.GyroscopePlugin, { absolutePosition: true }]
-//     ]
-//   });
-
-//   requestGyroscopePermission();
-
-//   document.getElementById('viewer').onclick = () => {
-//     viewer.destroy();
-//     document.getElementById('viewer').style.display = 'none';
-//   };
-// }
-
-// function requestGyroscopePermission() {
-//   if (typeof DeviceOrientationEvent !== 'undefined' &&
-//       typeof DeviceOrientationEvent.requestPermission === 'function') {
-//     DeviceOrientationEvent.requestPermission()
-//       .then(permissionState => {
-//         if (permissionState === 'granted') {
-//           console.log('Gyroscope permission granted');
-//         } else {
-//           alert('Gyroscope permission denied. Tilt control will not work.');
-//         }
-//       })
-//       .catch(console.error);
-//   }
-// }
-
-// document.getElementById('enable-motion').addEventListener('click', () => {
-//   if (typeof DeviceOrientationEvent !== 'undefined' &&
-//       typeof DeviceOrientationEvent.requestPermission === 'function') {
-//     DeviceOrientationEvent.requestPermission()
-//       .then(state => {
-//         if (state === 'granted') {
-//           alert('Motion control enabled.');
-//         } else {
-//           alert('Motion control denied.');
-//         }
-//       })
-//       .catch(console.error);
-//   }
-// });
-
 let viewer;
 let motionGranted = false;
 let currentImage = '';
@@ -121,23 +52,30 @@ function openViewer(image) {
   document.getElementById('viewer').style.display = 'block';
 
   viewer = new PhotoSphereViewer.Viewer({
-  container: document.getElementById('viewer'),
-  panorama: image,
-  navbar: 'zoom move fullscreen',
-  plugins: [
-    [PhotoSphereViewer.GyroscopePlugin, {
-      touchmove: true,             // allow touch + gyro
-      absolutePosition: false     // usually false for smooth behaviour
-    }]
-  ]
-});
+    container: document.getElementById('viewer'),
+    panorama: image,
+    navbar: 'zoom move fullscreen',
+    plugins: [
+      [PhotoSphereViewer.GyroscopePlugin, {
+        touchmove: true
+      }]
+    ]
+  });
+
+  viewer.once('ready', () => {
+    const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
+    if (gyro) {
+      gyro.start();
+      console.log('Gyroscope started');
+    } else {
+      console.error('GyroscopePlugin not found!');
+    }
+  });
 
   document.getElementById('viewer').onclick = () => {
-    gyroscope.stop(); // 👈 optional: stop it when closing
+    const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
+    if (gyro) gyro.stop();
     viewer.destroy();
     document.getElementById('viewer').style.display = 'none';
   };
 }
- const gyroscope = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
-  gyroscope.start();  // 👈 activate it!
-
