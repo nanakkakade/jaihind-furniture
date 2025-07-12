@@ -94,7 +94,7 @@
 
 
 
-
+//2.0
 
 
 let marzipanoViewer = null;
