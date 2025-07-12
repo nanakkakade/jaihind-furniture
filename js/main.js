@@ -79,3 +79,15 @@ function openViewer(image) {
     document.getElementById('viewer').style.display = 'none';
   };
 }
+
+
+window.addEventListener('deviceorientation', e => {
+  if (viewer) {
+    const lon = e.alpha || 0;
+    const lat = e.beta || 0;
+    viewer.rotate({
+      longitude: THREE.MathUtils.degToRad(lon),
+      latitude: THREE.MathUtils.degToRad(lat)
+    });
+  }
+});
