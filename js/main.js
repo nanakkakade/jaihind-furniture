@@ -121,17 +121,16 @@ function openViewer(image) {
   document.getElementById('viewer').style.display = 'block';
 
   viewer = new PhotoSphereViewer.Viewer({
-    container: document.getElementById('viewer'),
-    panorama: image,
-    navbar: 'zoom move fullscreen',
-    defaultLong: Math.PI,
-    useXmpData: false,
-    touchmoveTwoFingers: false,
-    mousewheel: false,
-    plugins: [
-      [PhotoSphereViewer.GyroscopePlugin, { absolutePosition: true }]
-    ]
-  });
+  container: document.getElementById('viewer'),
+  panorama: image,
+  navbar: 'zoom move fullscreen',
+  plugins: [
+    [PhotoSphereViewer.GyroscopePlugin, {
+      touchmove: true,             // allow touch + gyro
+      absolutePosition: false     // usually false for smooth behaviour
+    }]
+  ]
+});
 
   document.getElementById('viewer').onclick = () => {
     viewer.destroy();
