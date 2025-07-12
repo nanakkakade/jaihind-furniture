@@ -97,8 +97,54 @@
 //2.0
 
 
-let marzipanoViewer = null;
-let currentScene = null;
+// let marzipanoViewer = null;
+// let currentScene = null;
+
+// fetch('all360.txt')
+//   .then(response => response.text())
+//   .then(data => {
+//     const list = document.getElementById('product-list');
+//     data.trim().split('\n').forEach(line => {
+//       const [name, img] = line.split('|');
+//       const li = document.createElement('li');
+//       li.textContent = name;
+//       li.onclick = () => openViewer(img);
+//       list.appendChild(li);
+//     });
+//   });
+
+// function openViewer(image) {
+//   document.getElementById('viewer').style.display = 'block';
+
+//   if (!marzipanoViewer) {
+//     marzipanoViewer = new Marzipano.Viewer(document.getElementById('viewer'));
+//   }
+
+//   // Clean up old scene
+//   if (currentScene) {
+//     currentScene.destroy();
+//   }
+
+//   const source = Marzipano.ImageUrlSource.fromString(image);
+//   const geometry = new Marzipano.EquirectGeometry([{ width: 4096 }]);
+//   const limiter = Marzipano.RectilinearView.limit.traditional(1024, 120 * Math.PI / 180);
+//   const view = new Marzipano.RectilinearView(null, limiter);
+
+//   currentScene = marzipanoViewer.createScene({
+//     source: source,
+//     geometry: geometry,
+//     view: view,
+//   });
+
+//   currentScene.switchTo();
+
+//   // Enable gyroscope
+//   view.enableMovement();
+// }
+
+
+
+//3.0
 
 fetch('all360.txt')
   .then(response => response.text())
@@ -116,28 +162,11 @@ fetch('all360.txt')
 function openViewer(image) {
   document.getElementById('viewer').style.display = 'block';
 
-  if (!marzipanoViewer) {
-    marzipanoViewer = new Marzipano.Viewer(document.getElementById('viewer'));
-  }
-
-  // Clean up old scene
-  if (currentScene) {
-    currentScene.destroy();
-  }
-
-  const source = Marzipano.ImageUrlSource.fromString(image);
-  const geometry = new Marzipano.EquirectGeometry([{ width: 4096 }]);
-  const limiter = Marzipano.RectilinearView.limit.traditional(1024, 120 * Math.PI / 180);
-  const view = new Marzipano.RectilinearView(null, limiter);
-
-  currentScene = marzipanoViewer.createScene({
-    source: source,
-    geometry: geometry,
-    view: view,
+  pannellum.viewer('viewer', {
+    type: 'equirectangular',
+    panorama: image,
+    autoLoad: true,
+    compass: false,
+    orientationOnByDefault: true
   });
-
-  currentScene.switchTo();
-
-  // Enable gyroscope
-  view.enableMovement();
 }
