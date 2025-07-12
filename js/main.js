@@ -85,3 +85,18 @@ function requestGyroscopePermission() {
       .catch(console.error);
   }
 }
+
+document.getElementById('enable-motion').addEventListener('click', () => {
+  if (typeof DeviceOrientationEvent !== 'undefined' &&
+      typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission()
+      .then(state => {
+        if (state === 'granted') {
+          alert('Motion control enabled.');
+        } else {
+          alert('Motion control denied.');
+        }
+      })
+      .catch(console.error);
+  }
+});
