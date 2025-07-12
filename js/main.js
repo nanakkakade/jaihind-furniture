@@ -69,9 +69,39 @@
 //   }
 // });
 
-
 let viewer;
 let motionGranted = false;
+let currentImage = '';
+
+fetch('all360.txt')
+  .then(response => response.text())
+  .then(data => {
+    const list = document.getElementById('product-list');
+    data.trim().split('\n').forEach(line => {
+      const [name, img] = line.split('|');
+      const li = document.createElement('li');
+      li.textContent = name;
+      li.onclick = () => handleProductClick(img);
+      list.appendChild(li);
+    });
+  });
+
+function handleProductClick(image) {
+  currentImage = image;
+
+  if (motionGranted) {
+    openViewer(currentImage);
+  } else if (
+    typeof DeviceOrientationEvent !== 'undefined' &&
+    typeof DeviceOrientationEvent.requestPermission === 'function'
+  ) {
+    document.getElementById('enable-motion').style.display = 'block';
+    alert('Please enable motion control before viewing.');
+  } else {
+    // If no permission API (e.g., Android or older iOS)
+    openViewer(currentImage);
+  }
+}
 
 document.getElementById('enable-motion').addEventListener('click', () => {
   DeviceOrientationEvent.requestPermission()
@@ -79,7 +109,6 @@ document.getElementById('enable-motion').addEventListener('click', () => {
       if (state === 'granted') {
         motionGranted = true;
         document.getElementById('enable-motion').style.display = 'none';
-        // reopen viewer after granting
         openViewer(currentImage);
       } else {
         alert('Motion control denied.');
@@ -88,19 +117,7 @@ document.getElementById('enable-motion').addEventListener('click', () => {
     .catch(console.error);
 });
 
-let currentImage = '';
-
 function openViewer(image) {
-  currentImage = image;
-
-  if (!motionGranted &&
-      typeof DeviceOrientationEvent !== 'undefined' &&
-      typeof DeviceOrientationEvent.requestPermission === 'function') {
-    document.getElementById('enable-motion').style.display = 'block';
-    alert('Please enable motion control to continue.');
-    return;
-  }
-
   document.getElementById('viewer').style.display = 'block';
 
   viewer = new PhotoSphereViewer.Viewer({
