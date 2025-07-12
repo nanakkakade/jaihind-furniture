@@ -145,6 +145,7 @@
 
 
 //3.0
+let panoViewer = null;
 
 fetch('all360.txt')
   .then(response => response.text())
@@ -162,7 +163,12 @@ fetch('all360.txt')
 function openViewer(image) {
   document.getElementById('viewer').style.display = 'block';
 
-  pannellum.viewer('viewer', {
+  if (panoViewer) {
+    // destroy previous viewer
+    document.getElementById('viewer').innerHTML = '';
+  }
+
+  panoViewer = pannellum.viewer('viewer', {
     type: 'equirectangular',
     panorama: image,
     autoLoad: true,
@@ -170,3 +176,4 @@ function openViewer(image) {
     orientationOnByDefault: true
   });
 }
+
