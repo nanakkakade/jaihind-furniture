@@ -137,3 +137,12 @@ function openViewer(image) {
     document.getElementById('viewer').style.display = 'none';
   };
 }
+ const gyroscope = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
+  gyroscope.start();  // 👈 activate it!
+
+  document.getElementById('viewer').onclick = () => {
+    gyroscope.stop(); // 👈 optional: stop it when closing
+    viewer.destroy();
+    document.getElementById('viewer').style.display = 'none';
+  };
+}
