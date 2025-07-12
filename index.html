@@ -4,24 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jaihind Furniture & Interiors</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://unpkg.com/photo-sphere-viewer@4/dist/photo-sphere-viewer.css">
 </head>
 <body>
 <header>
   <h1>Jaihind Furniture & Interiors</h1>
-  <p>Shankar wadi, Somatane Sehuroad, Pune 410506 | 📞 9822037833</p>
 </header>
-
 <main>
-  <h2>Our Products</h2>
-  <div id="product-list" class="grid"></div>
+  <ul id="product-list"></ul>
 </main>
+<footer>
+  <p>Address: Shankar wadi, Somatane Sehuroad, Pune 410506 | Contact: 9822037833</p>
+</footer>
 
-<div id="modal" class="modal">
-  <span id="close">&times;</span>
-  <img id="modal-img" src="" alt="360 view">
-</div>
+<div id="viewer" class="viewer"></div>
 
-<script src="script.js"></script>
+<script src="https://unpkg.com/uevent@2/browser.js"></script>
+<script src="https://unpkg.com/three@0.150.1/build/three.js"></script>
+<script src="https://unpkg.com/photo-sphere-viewer@4/dist/photo-sphere-viewer.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
