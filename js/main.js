@@ -55,7 +55,6 @@ function openViewer(image) {
     container: document.getElementById('viewer'),
     panorama: image,
     navbar: 'zoom move fullscreen',
-    defaultFov: 120,
     plugins: [
       [PhotoSphereViewer.GyroscopePlugin, {
         touchmove: true
@@ -65,7 +64,7 @@ function openViewer(image) {
 
   viewer.once('ready', () => {
      viewer.rotate({ longitude: 0, latitude: 0 });
-
+     viewer.zoom(90); 
     const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
     if (gyro) {
       gyro.start();
