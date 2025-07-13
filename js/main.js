@@ -26,27 +26,22 @@ function handleProductClick(image) {
     typeof DeviceOrientationEvent !== 'undefined' &&
     typeof DeviceOrientationEvent.requestPermission === 'function'
   ) {
-    document.getElementById('enable-motion').style.display = 'block';
-    alert('Please enable motion control before viewing.');
-  } else {
-    // If no permission API (e.g., Android or older iOS)
-    openViewer(currentImage);
-  }
-}
-
-document.getElementById('enable-motion').addEventListener('click', () => {
-  DeviceOrientationEvent.requestPermission()
+    DeviceOrientationEvent.requestPermission()
     .then(state => {
       if (state === 'granted') {
         motionGranted = true;
-        document.getElementById('enable-motion').style.display = 'none';
         openViewer(currentImage);
       } else {
         alert('Motion control denied.');
       }
     })
     .catch(console.error);
-});
+  } else {
+    // If no permission API (e.g., Android or older iOS)
+    openViewer(currentImage);
+  }
+}
+
 
 function openViewer(image) {
   document.getElementById('viewer').style.display = 'block';
