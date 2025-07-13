@@ -63,6 +63,8 @@ function openViewer(image) {
   });
 
   viewer.once('ready', () => {
+     viewer.rotate({ longitude: 0, latitude: 0 });
+
     const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
     if (gyro) {
       gyro.start();
@@ -73,7 +75,7 @@ function openViewer(image) {
   });
 
   document.getElementById('viewer').onclick = () => {
-    const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
+    const gyroa = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
     if (gyro) gyro.stop();
     viewer.destroy();
     document.getElementById('viewer').style.display = 'none';
@@ -81,13 +83,13 @@ function openViewer(image) {
 }
 
 
-window.addEventListener('deviceorientation', e => {
-  if (viewer) {
-    const lon = e.alpha || 0;
-    const lat = e.beta || 0;
-    viewer.rotate({
-      longitude: THREE.MathUtils.degToRad(lon),
-      latitude: THREE.MathUtils.degToRad(lat)
-    });
-  }
-});
+// window.addEventListener('deviceorientation', e => {
+//   if (viewer) {
+//     const lon = e.alpha || 0;
+//     const lat = e.beta || 0;
+//     viewer.rotate({
+//       longitude: THREE.MathUtils.degToRad(lon),
+//       latitude: THREE.MathUtils.degToRad(lat)
+//     });
+//   }
+// });
