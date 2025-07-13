@@ -64,7 +64,7 @@ function openViewer(image) {
 
   viewer.once('ready', () => {
      viewer.rotate({ longitude: 0, latitude: 0 });
-     viewer.zoom(90); 
+     viewer.zoom(120); 
     const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
     if (gyro) {
       gyro.start();
