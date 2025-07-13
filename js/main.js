@@ -1,9 +1,8 @@
-
-
 let viewer;
 let motionGranted = false;
 let currentImage = '';
 
+// Fetch and build product list
 fetch('all360.txt')
   .then(response => response.text())
   .then(data => {
@@ -17,6 +16,7 @@ fetch('all360.txt')
     });
   });
 
+// Handle product click
 function handleProductClick(image) {
   currentImage = image;
 
@@ -27,22 +27,22 @@ function handleProductClick(image) {
     typeof DeviceOrientationEvent.requestPermission === 'function'
   ) {
     DeviceOrientationEvent.requestPermission()
-    .then(state => {
-      if (state === 'granted') {
-        motionGranted = true;
-        openViewer(currentImage);
-      } else {
-        alert('Motion control denied.');
-      }
-    })
-    .catch(console.error);
+      .then(state => {
+        if (state === 'granted') {
+          motionGranted = true;
+          openViewer(currentImage);
+        } else {
+          alert('Motion control denied.');
+        }
+      })
+      .catch(console.error);
   } else {
     // If no permission API (e.g., Android or older iOS)
     openViewer(currentImage);
   }
 }
 
-
+// Open the 360 viewer
 function openViewer(image) {
   document.getElementById('viewer').style.display = 'block';
 
@@ -58,27 +58,31 @@ function openViewer(image) {
   });
 
   viewer.once('ready', () => {
-     viewer.rotate({ longitude: 0, latitude: 0 });
-     viewer.zoom(90); 
+    viewer.rotate({ longitude: 0, latitude: 0 });
+    viewer.zoom(90);
+
     const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
     if (gyro) {
       gyro.start();
       console.log('Gyroscope started');
-       viewer.on('zoom-updated', () => {
-      gyro.stop();
-      gyro.start();
-      console.log('Gyroscope restarted after zoom');
-    });
+
+      // Restart gyro after zoom events
+      viewer.on('zoom-updated', () => {
+        gyro.stop();
+        gyro.start();
+        console.log('Gyroscope restarted after zoom');
+      });
     } else {
       console.error('GyroscopePlugin not found!');
     }
   });
 
+  // Close viewer on click
   document.getElementById('viewer').onclick = () => {
-    const gyroa = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
+    const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
     if (gyro) gyro.stop();
+
     viewer.destroy();
     document.getElementById('viewer').style.display = 'none';
   };
 }
-
