@@ -23,14 +23,7 @@
 <h1>Device Orientation Debug    till the orientation working</h1>
 <pre id="output"></pre>
 
-<script>
-window.addEventListener('deviceorientation', e => {
-  document.getElementById('output').textContent =
-    'alpha: ' + e.alpha + '\\n' +
-    'beta: ' + e.beta + '\\n' +
-    'gamma: ' + e.gamma;
-});
-</script>
+
 <script src="https://unpkg.com/uevent@2/browser.js"></script>
 <script src="https://unpkg.com/three@0.150.1/build/three.js"></script>
 <script src="https://unpkg.com/photo-sphere-viewer@4/dist/photo-sphere-viewer.js"></script>
