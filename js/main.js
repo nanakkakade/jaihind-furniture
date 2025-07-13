@@ -59,7 +59,7 @@ function openViewer(image) {
 
   viewer.once('ready', () => {
     viewer.rotate({ longitude: 0, latitude: 0 });
-    viewer.zoom(30);
+    viewer.zoom(0);
 
     const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
     if (gyro) {
@@ -75,6 +75,7 @@ function openViewer(image) {
     } else {
       console.error('GyroscopePlugin not found!');
     }
+    viewer.zoom(0);
   });
 
   // Close viewer on click
