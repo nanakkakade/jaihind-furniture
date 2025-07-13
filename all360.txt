@@ -1,5 +1,2 @@
-Abhiraj Living Room|images/AbhirajLivingRoom.png
-Bed|images/bed-360.jpg
-Sofa|images/sofa-360.jpg
-Dining Table|images/dining-360.jpg
-Wardrobe|images/wardrobe-360.jpg
+Avon Vista sir Living Room|images/AbhirajLivingRoom.png
+Avon Vista Living Area|images/hall360.png
