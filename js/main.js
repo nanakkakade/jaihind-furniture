@@ -1,27 +1,43 @@
-let viewer;
-let motionGranted = false;
-let currentImage = '';
+import { openViewer } from './viewer.js';
 
-// Fetch and build product list
+let motionGranted = false;
+
+// build product list
 fetch('all360.txt')
   .then(response => response.text())
   .then(data => {
     const list = document.getElementById('product-list');
-    data.trim().split('\n').forEach(line => {
+    const products = data.trim().split('\n').map(line => {
       const [name, img] = line.split('|');
+      return { name, img };
+    });
+
+    products.forEach(({ name, img }) => {
       const li = document.createElement('li');
       li.textContent = name;
-      li.onclick = () => handleProductClick(img);
+      li.onclick = () => selectProduct(img);
       list.appendChild(li);
     });
+
+    // check URL param
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedImage = urlParams.get('image');
+    if (selectedImage) {
+      openWithPermission(selectedImage);
+    }
   });
 
-// Handle product click
-function handleProductClick(image) {
-  currentImage = image;
+function selectProduct(image) {
+  const url = new URL(window.location);
+  url.searchParams.set('image', image);
+  window.history.pushState({}, '', url);
 
+  openWithPermission(image);
+}
+
+function openWithPermission(image) {
   if (motionGranted) {
-    openViewer(currentImage);
+    openViewer(image);
   } else if (
     typeof DeviceOrientationEvent !== 'undefined' &&
     typeof DeviceOrientationEvent.requestPermission === 'function'
@@ -30,60 +46,25 @@ function handleProductClick(image) {
       .then(state => {
         if (state === 'granted') {
           motionGranted = true;
-          openViewer(currentImage);
+          openViewer(image);
         } else {
           alert('Motion control denied.');
         }
       })
       .catch(console.error);
   } else {
-    // If no permission API (e.g., Android or older iOS)
-    openViewer(currentImage);
+    openViewer(image);
   }
 }
 
-// Open the 360 viewer
-function openViewer(image) {
-  document.getElementById('viewer').style.display = 'block';
-
-  viewer = new PhotoSphereViewer.Viewer({
-    container: document.getElementById('viewer'),
-    panorama: image,
-    navbar: 'zoom move fullscreen',
-    plugins: [
-      [PhotoSphereViewer.GyroscopePlugin, {
-        touchmove: true
-      }]
-    ]
-  });
-
-  viewer.once('ready', () => {
-    viewer.rotate({ longitude: 0, latitude: 0 });
-    viewer.zoom(0);
-
-    const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
-    if (gyro) {
-      gyro.start();
-      console.log('Gyroscope started');
-
-      // Restart gyro after zoom events
-      viewer.on('zoom-updated', () => {
-        gyro.stop();
-        gyro.start();
-        console.log('Gyroscope restarted after zoom');
-      });
-    } else {
-      console.error('GyroscopePlugin not found!');
-    }
-    viewer.zoom(0);
-  });
-
-  // Close viewer on click
-  document.getElementById('viewer').onclick = () => {
-    const gyro = viewer.getPlugin(PhotoSphereViewer.GyroscopePlugin);
-    if (gyro) gyro.stop();
-
-    viewer.destroy();
+// optional: handle browser back/forward
+window.addEventListener('popstate', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const selectedImage = urlParams.get('image');
+  if (selectedImage) {
+    openWithPermission(selectedImage);
+  } else {
+    // close viewer if no image param
     document.getElementById('viewer').style.display = 'none';
-  };
-}
+  }
+});
