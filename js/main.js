@@ -55,9 +55,6 @@ function openViewer(image) {
     container: document.getElementById('viewer'),
     panorama: image,
     navbar: 'zoom move fullscreen',
-    defaultFov: 90,
-     minFov: 30,
-     maxFov: 90,
     plugins: [
       [PhotoSphereViewer.GyroscopePlugin, {
         touchmove: true
