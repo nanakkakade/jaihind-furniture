@@ -69,6 +69,11 @@ function openViewer(image) {
     if (gyro) {
       gyro.start();
       console.log('Gyroscope started');
+       viewer.on('zoom-updated', () => {
+      gyro.stop();
+      gyro.start();
+      console.log('Gyroscope restarted after zoom');
+    });
     } else {
       console.error('GyroscopePlugin not found!');
     }
